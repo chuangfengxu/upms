@@ -1,0 +1,15 @@
+spring:
+  output:
+    ansi:
+     enabled: detect
+
+logging:
+  file: /var/logs/upms/debug.log
+  level:
+      com:
+        banggood:
+          upms:
+            dao: debug
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss:SSS}][%p][%t][%C.%M\\(%F:%L\\)] - %m%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss:SSS}][%p][%t][%C.%M\\(%F:%L\\)] - %m%n"

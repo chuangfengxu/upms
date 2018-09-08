@@ -1,0 +1,11 @@
+##mybatis
+#mybatis.mapperLocations=classpath:mapper/*.xml
+#mybatis.typeAliasesPackage=com.dev.bean.po
+#mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+#mybatis.configuration.map-underscore-to-camel-case=true
+##mybatis.type-handlers-package=com.dev.common.handler
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true

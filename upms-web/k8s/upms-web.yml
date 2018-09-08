@@ -1,0 +1,164 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: upms-web-config
+  namespace: upms
+data:
+  UPMS_SPRING_PROFILES_ACTIVE:  "prod"
+  UPMS_SERVER_PORT: "8888"
+  UPMS_SILK_SNOWFLAKE_WORKID: "10"
+  UPMS_SILK_SNOWFLAKE_DATACENTERID: "10"
+  spring_datasource_dbip: ""
+  spring_datasource_dbport: ""
+  spring_datasource_dbname: ""
+  spring_datasource_username: ""
+  spring_datasource_password: ""
+  spring_datasource_dbip1: ""
+  spring_datasource_dbport1: ""
+  spring_datasource_dbname1: ""
+  spring_datasource_username1: ""
+  spring_datasource_password1: ""
+  spring_datasource_dbip2: ""
+  spring_datasource_dbport2: ""
+  spring_datasource_dbname2: ""
+  spring_datasource_username2: ""
+  spring_datasource_password2: ""
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: upms-web-deployment
+  namespace: upms
+spec:
+  replicas: 1 #只运行一个pod
+  template:
+    metadata:
+      labels: #必须匹配之前的spec.selector
+        app: upms-web #pod副本拥有此标签，对用RC的selector
+    spec:
+      volumes:
+      - name: upms-log-volume
+        hostPath:
+          path: /logs/upms/prod
+      containers: #pod内容器定义
+      - name: upms-web #容器的名称
+        image: 192.168.1.207/architecture/upms-web:1.0.0 #容器对应的docker image
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+        env:
+        - name: UPMS_SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: UPMS_SPRING_PROFILES_ACTIVE
+        - name: UPMS_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: UPMS_SERVER_PORT
+        - name: UPMS_SILK_SNOWFLAKE_WORKID
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: UPMS_SILK_SNOWFLAKE_WORKID
+        - name: UPMS_SILK_SNOWFLAKE_DATACENTERID
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: UPMS_SILK_SNOWFLAKE_DATACENTERID
+# upms数据库
+        - name: spring_datasource_dbip
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbip
+        - name: spring_datasource_dbport
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbport
+        - name: spring_datasource_dbname
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbname
+        - name: spring_datasource_username
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_username
+        - name: spring_datasource_password
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_password
+# oa数据库
+        - name: spring_datasource_dbip1
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbip1
+        - name: spring_datasource_dbport1
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbport1
+        - name: spring_datasource_dbname1
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbname1
+        - name: spring_datasource_username1
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_username1
+        - name: spring_datasource_password1
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_password1
+# hms数据库
+        - name: spring_datasource_dbip2
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbip2
+        - name: spring_datasource_dbport2
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbport2
+        - name: spring_datasource_dbname2
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_dbname2
+        - name: spring_datasource_username2
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_username2
+        - name: spring_datasource_password2
+          valueFrom:
+            configMapKeyRef:
+              name: upms-web-config
+              key: spring_datasource_password2
+        volumeMounts:
+        - mountPath: /var/logs/upms
+          name: upms-log-volume
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: upms-web-svc
+  namespace: upms
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector: #选择器
+    app: upms-web #符合目标的pod拥有此标签

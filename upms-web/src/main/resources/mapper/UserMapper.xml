@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dev.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.dev.bean.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="userName" />
+    </resultMap>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from user 
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        id, user_name
+        from user
+        where user_id = #{userId,jdbcType=BIGINT}
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+#数据源
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://www.xuchuangfeng.com:3306/upms?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    data-username: 123456
+    data-password: root
